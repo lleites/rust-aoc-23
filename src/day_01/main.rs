@@ -2,23 +2,6 @@ use std::fs::read_to_string;
 use std::io::{self};
 use std::num::ParseIntError;
 
-fn main() -> io::Result<()> {
-    // Test get_digits
-    let result_3 = get_digits("pqr3st4u8vwx");
-    let expected_3 = "38";
-    assert_eq!(result_3.unwrap(), expected_3);
-
-    let result_1 = get_digits("treb7uchet");
-    let expected_1 = "77";
-    assert_eq!(result_1.unwrap(), expected_1);
-
-    // Test process_file
-    let actual = process_file()?;
-    assert_eq!(actual, 142);
-
-    Ok(())
-}
-
 fn get_digits(line: &str) -> Option<String> {
     let mut result = String::new();
 
@@ -59,4 +42,27 @@ fn process_file() -> io::Result<i32> {
     }
 
     Ok(sum)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_digits() {
+        let result_3 = get_digits("pqr3st4u8vwx");
+        let expected_3 = "38";
+        assert_eq!(result_3.unwrap(), expected_3);
+
+        let result_1 = get_digits("treb7uchet");
+        let expected_1 = "77";
+        assert_eq!(result_1.unwrap(), expected_1);
+    }
+    #[test]
+
+    fn test_process_file() {
+        // Test process_file
+        let actual = process_file().unwrap();
+        assert_eq!(actual, 142);
+    }
 }

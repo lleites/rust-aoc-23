@@ -28,56 +28,6 @@ fn parse_throw(line: &str) -> Throw {
     Throw { red, blue, green }
 }
 
-fn main() -> io::Result<()> {
-    let result: Throw = parse_throw("1 red, 2 green, 6 blue");
-    let expected = Throw {
-        red: 1,
-        blue: 6,
-        green: 2,
-    };
-    assert_eq!(result, expected);
-
-    let result: Throw = parse_throw("3 green, 10 blue");
-    let expected = Throw {
-        red: 0,
-        blue: 10,
-        green: 3,
-    };
-    assert_eq!(result, expected);
-
-    let result: Throw = parse_throw("2 green");
-    let expected = Throw {
-        red: 0,
-        blue: 0,
-        green: 2,
-    };
-    assert_eq!(result, expected);
-
-    let result = parse_line("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green");
-    let expected_throws: Vec<Throw> = Vec::from([
-        Throw {
-            red: 4,
-            blue: 3,
-            green: 0,
-        },
-        Throw {
-            red: 1,
-            blue: 6,
-            green: 2,
-        },
-        Throw {
-            red: 0,
-            blue: 0,
-            green: 2,
-        },
-    ]);
-    assert_eq!(result, (1, expected_throws));
-
-    assert_eq!(process_file().unwrap(), 7);
-
-    Ok(())
-}
-
 fn parse_line(line: &str) -> (i32, Vec<Throw>) {
     let mut parts = line.split(":");
     let id_part = parts.next().unwrap();
@@ -108,4 +58,64 @@ fn process_file() -> io::Result<i32> {
     }
 
     Ok(sum)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_throw() {
+        let result: Throw = parse_throw("1 red, 2 green, 6 blue");
+        let expected = Throw {
+            red: 1,
+            blue: 6,
+            green: 2,
+        };
+        assert_eq!(result, expected);
+
+        let result: Throw = parse_throw("3 green, 10 blue");
+        let expected = Throw {
+            red: 0,
+            blue: 10,
+            green: 3,
+        };
+        assert_eq!(result, expected);
+
+        let result: Throw = parse_throw("2 green");
+        let expected = Throw {
+            red: 0,
+            blue: 0,
+            green: 2,
+        };
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_parse_line() {
+        let result = parse_line("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green");
+        let expected_throws: Vec<Throw> = Vec::from([
+            Throw {
+                red: 4,
+                blue: 3,
+                green: 0,
+            },
+            Throw {
+                red: 1,
+                blue: 6,
+                green: 2,
+            },
+            Throw {
+                red: 0,
+                blue: 0,
+                green: 2,
+            },
+        ]);
+        assert_eq!(result, (1, expected_throws));
+    }
+
+    #[test]
+    fn test_process_file() {
+        assert_eq!(process_file().unwrap(), 7);
+    }
 }
