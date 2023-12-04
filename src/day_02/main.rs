@@ -33,7 +33,8 @@ fn parse_line(line: &str) -> (i32, Vec<Throw>) {
     let id_part = parts.next().unwrap();
     let throws_part = parts.next().unwrap();
     let throws = throws_part.split(";").map(parse_throw).collect();
-    (id_part.split(" ").nth(1).unwrap().parse().unwrap(), throws)
+    let id = id_part.split(" ").nth(1).unwrap().parse().unwrap();
+    (id, throws)
 }
 
 fn process_file() -> io::Result<i32> {
