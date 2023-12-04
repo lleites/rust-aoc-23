@@ -3,24 +3,20 @@ use std::io::{self};
 use std::num::ParseIntError;
 
 fn get_digits(line: &str) -> Option<String> {
-    let mut result = String::new();
+    let result: String;
 
-    for ch in line.chars() {
-        if ch.is_digit(10) {
-            result.push(ch);
-        }
-    }
+    let digits: Vec<char> = line.chars().filter(|ch| ch.is_digit(10)).collect();
 
-    if result.is_empty() {
+    if digits.is_empty() {
         return None;
     }
 
-    if result.len() > 1 {
-        let first = result.chars().next().unwrap();
-        let last = result.chars().last().unwrap();
+    let first = digits.first().unwrap();
+    if digits.len() > 1 {
+        let last = digits.last().unwrap();
         result = format!("{}{}", first, last);
     } else {
-        result = result.repeat(2);
+        result = format!("{}{}", first, first);
     }
 
     Some(result)
@@ -36,11 +32,7 @@ fn process_file() -> io::Result<i32> {
     let file_path = "src/day_01/01_input.txt";
     let file = read_to_string(file_path)?;
 
-    let mut sum = 0;
-    for line in file.lines() {
-        sum += process_line(line).unwrap();
-    }
-
+    let sum = file.lines().flat_map(process_line).sum();
     Ok(sum)
 }
 
