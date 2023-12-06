@@ -58,7 +58,3 @@ mod tests {
         assert_eq!(actual, 142);
     }
 }
-
-fn main() {
-    print!("{}", process_file().unwrap())
-}

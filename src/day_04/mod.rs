@@ -1,4 +1,5 @@
-use std::{fs::read_to_string, io};
+use crate::utils::read_lines;
+use std::io;
 
 fn parse_card(line: &str) -> i32 {
     let number_parts: Vec<&str> = line.split(":").last().unwrap().split("|").collect();
@@ -26,12 +27,7 @@ fn parse_card(line: &str) -> i32 {
     total
 }
 
-fn read_lines(file_path: &str) -> Vec<String> {
-    let file = read_to_string(file_path).unwrap();
-    file.lines().map(str::to_string).collect()
-}
-
-fn process_file() -> io::Result<i32> {
+pub fn process_file() -> io::Result<i32> {
     let mut result: i32 = 0;
     for line in read_lines("src/day_04/input.txt") {
         result += parse_card(&line);
@@ -57,8 +53,4 @@ mod tests {
 
         assert_eq!(result, 13);
     }
-}
-
-fn main() {
-    println!("{}", process_file().unwrap())
 }

@@ -120,7 +120,3 @@ mod tests {
         assert_eq!(process_file().unwrap(), 7);
     }
 }
-
-fn main() {
-    print!("{}", process_file().unwrap())
-}
