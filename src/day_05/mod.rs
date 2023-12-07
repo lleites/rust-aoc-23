@@ -1,7 +1,7 @@
 use crate::utils::read_lines;
-use std::{collections::HashMap, io};
+use std::collections::HashMap;
 
-pub fn build_mapping(lines: Vec<String>) -> HashMap<i32, i32> {
+fn build_mapping(lines: Vec<String>) -> HashMap<i32, i32> {
     let mut map = HashMap::new();
     for i in 0..99 {
         map.insert(i, i);
@@ -18,7 +18,7 @@ pub fn build_mapping(lines: Vec<String>) -> HashMap<i32, i32> {
     map
 }
 
-pub fn get_maps() -> Vec<HashMap<i32, i32>> {
+fn get_maps() -> Vec<HashMap<i32, i32>> {
     let file_content = read_lines("src/day_05/input.txt");
     let mut result = Vec::new();
     let first_map: HashMap<i32, i32> = file_content[0]
@@ -46,15 +46,15 @@ pub fn get_maps() -> Vec<HashMap<i32, i32>> {
     result
 }
 
-pub fn find_location() -> i32 {
+pub fn find_closest_location() -> i32 {
     let maps = get_maps();
     let mut folded_map: HashMap<i32, i32> = maps.first().unwrap().clone();
-    for map in get_maps() {
-        for (k, v) in folded_map.clone().iter() {
-            folded_map.insert(k.clone(), map.get(v).unwrap().clone());
+    for map in &maps {
+        for (k, v) in folded_map.clone() {
+            folded_map.insert(k, *map.get(&v).unwrap());
         }
     }
-    folded_map.values().min().unwrap().clone()
+    *folded_map.values().min().unwrap()
 }
 
 #[cfg(test)]
@@ -137,8 +137,8 @@ mod tests {
     }
 
     #[test]
-    fn test_find_location() {
-        let actual = find_location();
+    fn test_find_closest_location() {
+        let actual = find_closest_location();
         assert_eq!(actual, 35);
     }
 }
