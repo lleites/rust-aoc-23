@@ -1,24 +1,37 @@
 use std::collections::HashMap;
+use std::str::FromStr;
 
-fn count_steps(instructions: Vec<char>, map: HashMap<&str, (&str, &str)>) -> i32 {
-    let mut instructions = instructions.iter().cycle();
-    let mut number_steps = 1;
-    let mut current = match instructions.next().unwrap() {
-        'L' => map.get("AAA").unwrap().0,
-        'R' => map.get("AAA").unwrap().1,
-        _ => " ",
-    };
-    if current == "ZZZ" {
-        return number_steps;
+const FIRST: &str = "AAA";
+const LAST: &str = "ZZZ";
+
+enum Direction {
+    Left,
+    Right,
+}
+
+impl FromStr for Direction {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "L" => Ok(Direction::Left),
+            "R" => Ok(Direction::Right),
+            _ => Err(()),
+        }
     }
+}
+
+fn count_steps(instructions: Vec<Direction>, map: HashMap<&str, (&str, &str)>) -> i32 {
+    let instructions = instructions.iter().cycle();
+    let mut number_steps = 0;
+    let mut current = FIRST;
     for ins in instructions {
         number_steps += 1;
         current = match ins {
-            'L' => map.get(current).unwrap().0,
-            'R' => map.get(current).unwrap().1,
-            _ => " ",
+            Direction::Left => map.get(current).unwrap().0,
+            Direction::Right => map.get(current).unwrap().1,
         };
-        if current == "ZZZ" {
+        if current == LAST {
             return number_steps;
         }
     }
@@ -36,7 +49,10 @@ mod tests {
         map.insert("BBB", ("AAA", "ZZZ"));
         map.insert("ZZZ", ("ZZZ", "ZZZ"));
 
-        let instructions = vec!['L', 'L', 'R'];
+        let instructions = vec!['L', 'L', 'R']
+            .iter()
+            .flat_map(|char| Direction::from_str(char.to_string().as_ref()))
+            .collect();
 
         let result = count_steps(instructions, map);
 
